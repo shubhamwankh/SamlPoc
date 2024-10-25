@@ -24,7 +24,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfiguration {
 
     @Bean
-    SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    SecurityFilterChain configure(HttpSecurity http, Saml2WebSsoAuthenticationFilterPostProcessor p) throws Exception {
 
         OpenSaml4AuthenticationProvider authenticationProvider = new OpenSaml4AuthenticationProvider();
         authenticationProvider.setResponseAuthenticationConverter(groupsConverter());
@@ -35,6 +35,7 @@ public class SecurityConfiguration {
             )
             .saml2Login(saml2 -> saml2
                 .authenticationManager(new ProviderManager(authenticationProvider))
+                .addObjectPostProcessor(p)
             )
             .saml2Logout(withDefaults());
 
